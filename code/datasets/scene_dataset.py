@@ -13,7 +13,8 @@ class SceneDataset(torch.utils.data.Dataset):
                  data_dir,
                  img_res,
                  scan_id=0,
-                 cam_file=None
+                 cam_file=None,
+                 **kwargs
                  ):
 
         self.instance_dir = os.path.join('../data', data_dir, 'scan{0}'.format(scan_id))

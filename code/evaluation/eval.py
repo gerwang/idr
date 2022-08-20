@@ -27,6 +27,8 @@ def evaluate(**kwargs):
     scan_id = kwargs['scan_id'] if kwargs['scan_id'] != -1 else conf.get_int('dataset.scan_id', default=-1)
     if scan_id != -1:
         expname = expname + '_{0}'.format(scan_id)
+    if kwargs['case_name'] is not None:
+        self.expname = self.expname + '_{0}'.format(kwargs['case_name'])
 
     if kwargs['timestamp'] == 'latest':
         if os.path.exists(os.path.join('../', kwargs['exps_folder_name'], expname)):
@@ -54,6 +56,10 @@ def evaluate(**kwargs):
     dataset_conf = conf.get_config('dataset')
     if kwargs['scan_id'] != -1:
         dataset_conf['scan_id'] = kwargs['scan_id']
+    if kwargs['case_name'] is not None:
+        dataset_conf['case_name'] = kwargs['case_name']
+    if kwargs['split'] is not None:
+        dataset_conf['split'] = kwargs['split']
     eval_dataset = utils.get_class(conf.get_string('train.dataset_class'))(eval_cameras, **dataset_conf)
 
     # settings for camera optimization
@@ -246,6 +252,8 @@ if __name__ == '__main__':
     parser.add_argument('--timestamp', default='latest', type=str, help='The experiemnt timestamp to test.')
     parser.add_argument('--checkpoint', default='latest',type=str,help='The trained model checkpoint to test')
     parser.add_argument('--scan_id', type=int, default=-1, help='If set, taken to be the scan id.')
+    parser.add_argument('--case_name')
+    parser.add_argument('--split')
     parser.add_argument('--resolution', default=512, type=int, help='Grid resolution for marching cube')
     parser.add_argument('--is_uniform_grid', default=False, action="store_true", help='If set, evaluate marching cube with uniform grid.')
     parser.add_argument('--eval_cameras', default=False, action="store_true", help='If set, evaluate camera accuracy of trained cameras.')
@@ -271,5 +279,7 @@ if __name__ == '__main__':
              scan_id=opt.scan_id,
              resolution=opt.resolution,
              eval_cameras=opt.eval_cameras,
-             eval_rendering=opt.eval_rendering
+             eval_rendering=opt.eval_rendering,
+             case_name=opt.case_name,
+             split=opt.split
              )

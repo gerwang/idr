@@ -18,6 +18,8 @@ if __name__ == '__main__':
     parser.add_argument('--checkpoint', default='latest',type=str,help='The checkpoint epoch number of the run to be used in case of continuing from a previous run.')
     parser.add_argument('--train_cameras', default=False, action="store_true", help='If set, optimizing also camera location.')
     parser.add_argument('--scan_id', type=int, default=-1, help='If set, taken to be the scan id.')
+    parser.add_argument('--case_name')
+    parser.add_argument('--split')
 
     opt = parser.parse_args()
 
@@ -37,7 +39,9 @@ if __name__ == '__main__':
                                  timestamp=opt.timestamp,
                                  checkpoint=opt.checkpoint,
                                  scan_id=opt.scan_id,
-                                 train_cameras=opt.train_cameras
+                                 train_cameras=opt.train_cameras,
+                                 case_name=opt.case_name,
+                                 split=opt.split
                                  )
 
     trainrunner.run()

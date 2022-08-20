@@ -23,6 +23,8 @@ class IDRTrainRunner():
         scan_id = kwargs['scan_id'] if kwargs['scan_id'] != -1 else self.conf.get_int('dataset.scan_id', default=-1)
         if scan_id != -1:
             self.expname = self.expname + '_{0}'.format(scan_id)
+        if kwargs['case_name'] is not None:
+            self.expname = self.expname + '_{0}'.format(kwargs['case_name'])
 
         if kwargs['is_continue'] and kwargs['timestamp'] == 'latest':
             if os.path.exists(os.path.join('../',kwargs['exps_folder_name'],self.expname)):
@@ -79,6 +81,10 @@ class IDRTrainRunner():
         dataset_conf = self.conf.get_config('dataset')
         if kwargs['scan_id'] != -1:
             dataset_conf['scan_id'] = kwargs['scan_id']
+        if kwargs['case_name'] is not None:
+            dataset_conf['case_name'] = kwargs['case_name']
+        if kwargs['split'] is not None:
+            dataset_conf['split'] = kwargs['split']
 
         self.train_dataset = utils.get_class(self.conf.get_string('train.dataset_class'))(self.train_cameras,
                                                                                           **dataset_conf)
