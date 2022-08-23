@@ -28,7 +28,7 @@ def evaluate(**kwargs):
     if scan_id != -1:
         expname = expname + '_{0}'.format(scan_id)
     if kwargs['case_name'] is not None:
-        self.expname = self.expname + '_{0}'.format(kwargs['case_name'])
+        expname = expname + '_{0}'.format(kwargs['case_name'])
 
     if kwargs['timestamp'] == 'latest':
         if os.path.exists(os.path.join('../', kwargs['exps_folder_name'], expname)):
@@ -113,7 +113,8 @@ def evaluate(**kwargs):
 
         mesh = plt.get_surface_high_res_mesh(
             sdf=lambda x: model.implicit_network(x)[:, 0],
-            resolution=kwargs['resolution']
+            resolution=kwargs['resolution'],
+            object_bounding_sphere=conf.get_float('model.ray_tracer.object_bounding_sphere')
         )
 
         # Transform to world coordinates
@@ -122,10 +123,11 @@ def evaluate(**kwargs):
         else:
             mesh.apply_transform(scale_mat)
 
-        # Taking the biggest connected component
-        components = mesh.split(only_watertight=False)
-        areas = np.array([c.area for c in components], dtype=np.float)
-        mesh_clean = components[areas.argmax()]
+        # # Taking the biggest connected component
+        # components = mesh.split(only_watertight=False)
+        # areas = np.array([c.area for c in components], dtype=np.float)
+        # mesh_clean = components[areas.argmax()]
+        mesh_clean = mesh
         mesh_clean.export('{0}/surface_world_coordinates_{1}.ply'.format(evaldir, epoch), 'ply')
 
     if eval_rendering:

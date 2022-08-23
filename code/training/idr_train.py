@@ -154,6 +154,7 @@ class IDRTrainRunner():
         self.n_batches = len(self.train_dataloader)
         self.plot_freq = self.conf.get_int('train.plot_freq')
         self.plot_conf = self.conf.get_config('plot')
+        self.plot_conf['object_bounding_sphere'] = self.conf.get_float('model.ray_tracer.object_bounding_sphere')
 
         self.alpha_milestones = self.conf.get_list('train.alpha_milestones', default=[])
         self.alpha_factor = self.conf.get_float('train.alpha_factor', default=0.0)
